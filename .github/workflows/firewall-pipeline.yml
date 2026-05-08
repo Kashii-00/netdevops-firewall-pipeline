@@ -1,0 +1,52 @@
+name: Firewall Staging Pipeline
+
+on:
+  push:
+    paths:
+      - "rules/**/*.json"
+      - "scripts/**"
+      - ".github/workflows/firewall-pipeline.yml"
+  workflow_dispatch:
+
+jobs:
+  validate-deploy-verify:
+    runs-on: [self-hosted, macOS, ARM64]
+
+    env:
+      PFSENSE_URL: ${{ secrets.PFSENSE_URL }}
+      PFSENSE_API_KEY: ${{ secrets.PFSENSE_API_KEY }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Select latest rule file
+        id: rule
+        shell: bash
+        run: |
+          RULE_FILE=$(find rules -name "*.json" | sort | tail -n 1)
+
+          if [ -z "$RULE_FILE" ]; then
+            echo "No rule file found."
+            exit 1
+          fi
+
+          echo "Selected rule file: $RULE_FILE"
+          echo "file=$RULE_FILE" >> "$GITHUB_OUTPUT"
+
+      - name: Validate rule
+        run: node scripts/validate-rule.js "${{ steps.rule.outputs.file }}"
+
+      - name: Deploy rule to staging pfSense
+        run: node scripts/deploy-rule.js "${{ steps.rule.outputs.file }}"
+
+      - name: Verify rule exists in pfSense
+        run: node scripts/verify-rule.js "${{ steps.rule.outputs.file }}"

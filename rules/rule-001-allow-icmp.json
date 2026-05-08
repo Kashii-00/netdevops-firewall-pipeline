@@ -1,0 +1,10 @@
+{
+  "interface": ["lan"],
+  "type": "pass",
+  "ipprotocol": "inet",
+  "protocol": "icmp",
+  "source": "lan",
+  "destination": "any",
+  "descr": "PIPELINE TEST - Allow LAN ICMP",
+  "apply": true
+}
