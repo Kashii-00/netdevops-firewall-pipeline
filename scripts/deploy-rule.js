@@ -20,6 +20,8 @@ if (!PFSENSE_URL || !PFSENSE_API_KEY) {
 
 const rule = JSON.parse(fs.readFileSync(rulePath, "utf8"));
 
+fs.mkdirSync("logs", { recursive: true });
+
 const client = axios.create({
   baseURL: PFSENSE_URL,
   httpsAgent: new https.Agent({
