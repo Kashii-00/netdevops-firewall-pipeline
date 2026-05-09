@@ -95,9 +95,10 @@ try {
 
   if (expected === "success") {
     if (test.contains && !output.includes(test.contains)) {
-      throw new Error(`Traffic test output did not contain expected text: ${test.contains}`);
-    }
-
+    console.error("Actual traffic test output:");
+    console.error(output);
+    throw new Error(`Traffic test output did not contain expected text: ${test.contains}`);
+  }
     console.log("Traffic test passed.");
     console.log(output);
     saveLog("passed", output);
