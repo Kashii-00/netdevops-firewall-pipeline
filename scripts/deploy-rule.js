@@ -18,9 +18,11 @@ if (!PFSENSE_URL || !PFSENSE_API_KEY) {
   process.exit(1);
 }
 
-const rule = JSON.parse(fs.readFileSync(rulePath, "utf8"));
+const rawRule = JSON.parse(fs.readFileSync(rulePath, "utf8"));
 
 fs.mkdirSync("logs", { recursive: true });
+
+const { change_type, test, ...rule } = rawRule;
 
 const client = axios.create({
   baseURL: PFSENSE_URL,

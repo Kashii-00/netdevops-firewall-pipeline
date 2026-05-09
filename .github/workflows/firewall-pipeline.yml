@@ -50,3 +50,6 @@ jobs:
 
       - name: Verify rule exists in pfSense
         run: node scripts/verify-rule.js "${{ steps.rule.outputs.file }}"
+      
+      - name: Run lab traffic test
+        run: node scripts/test-traffic.js "${{ steps.rule.outputs.file }}"
