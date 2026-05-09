@@ -14,7 +14,7 @@
     "host": "192.168.128.100",
     "user": "kashika",
     "url": "http://192.168.64.6:8080",
-    "contains": "Hello from lab-server",
+    "contains": "Hello from lab server",
     "expected": "success",
     "timeout": 5
   }
